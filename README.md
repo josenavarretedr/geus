@@ -1,7 +1,20 @@
-# Vue 3 + Vite
+# GEUS
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Geus es una plataforma de gestión de usuario, para la administración de registros, medios de verificación y reportes de los usuarios de la plataforma.
 
-## Recommended IDE Setup
+## Lista de pendientes para el desarrollo de MVP
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+- Sobre el registros:
+  [ ] Gestionar rutas de navegación con auth guard para que el Dashboard sea accesible solo para usuarios autenticados
+  [ ] Crear formulario de registro
+  [ ] Crear formulario de login
+  [ ] Crear formulario de recuperación de contraseña
+  [ ] Crear formulario de cambio de contraseña
+
+- Sobre el resgistro de beneficiarios
+  [ ] Agregar algunas preguntas de vulnerabilidad
+  [ ] Input para agregar foto del documento de identidad
+  [ ] Input para agregar el consetimiento de uso de datos
+
+- ALGOLIA
+  [ ] Hacer la sincronización con el buscador.
