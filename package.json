@@ -9,6 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@algolia/autocomplete-core": "^1.11.1",
+    "@algolia/autocomplete-js": "^1.11.1",
+    "@algolia/autocomplete-theme-classic": "^1.11.1",
+    "algoliasearch": "^4.20.0",
     "dotenv": "^16.3.1",
     "firebase": "^10.4.0",
     "pinia": "^2.1.6",

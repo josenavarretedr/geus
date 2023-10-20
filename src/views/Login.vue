@@ -1,16 +1,9 @@
 <script setup>
-import { ref } from "vue";
-import { useUserStore } from "@/stores/user";
 import LoginForm from "@/components/LoginForm.vue";
-
-const userStore = useUserStore();
 </script>
 
 <template>
-  <div>
-    <h1>Hola desde Login view</h1>
-
+  <div class="max-w-md mx-auto flex items-center justify-center">
     <LoginForm></LoginForm>
-    <router-link to="/">Home</router-link>
   </div>
 </template>

@@ -6,7 +6,7 @@ import router from '@/router'
 import appFirebase from '@/firebaseInit'
 
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
 
 const db = getFirestore(appFirebase);
 const auth = getAuth(appFirebase);
@@ -15,6 +15,8 @@ const auth = getAuth(appFirebase);
 export const useUserStore = defineStore('user', () => {
   const email = ref('')
   const password = ref('')
+  const beneficiaries = ref([])
+
 
   async function createUser() {
 
@@ -35,6 +37,9 @@ export const useUserStore = defineStore('user', () => {
       const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value)
       const user = userCredential.user
       console.log('User signed in: ', user)
+
+      beneficiaries.value = await getBeneficiaries()
+
       // Al confirmar el login tiene que redirigi a /dashboard
       router.push('/dashboard')
 
@@ -54,5 +59,21 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  return { email, password, signIn, createUser, signOutUser }
+  async function getBeneficiaries() {
+    const querySnapshot = await getDocs(collection(db, "beneficiaries"));
+
+    let results = [];
+
+    querySnapshot.forEach((doc) => {
+      results.push(doc.data());
+    });
+
+    return results;
+  }
+
+  function getBeneficiary(id) {
+    return beneficiaries.value.find(beneficiary => beneficiary.id === id)
+  }
+
+  return { email, password, beneficiaries, signIn, createUser, signOutUser, getBeneficiary }
 })

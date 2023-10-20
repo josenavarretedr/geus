@@ -1,9 +1,9 @@
-import { defineConfig} from 'vite'
+import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
+import tailwindcss from 'tailwindcss'
 
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
   // configure Vite to recognize the "@" symbol as the "src" folder in your project, you can modify the "resolve.alias"
@@ -12,4 +12,13 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src')
     }
   },
+
+  // PostCss and Tailwind
+  css: {
+    postcss: {
+      plugins: [
+        tailwindcss(),]
+    }
+  }
+
 })
