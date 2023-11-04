@@ -75,6 +75,8 @@
         />
       </div>
 
+      <FileInput namePath="docIDs" />
+
       <button
         @click="createBeneficiary()"
         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
@@ -88,15 +90,19 @@
 <script setup>
 import { ref, computed } from "vue";
 import appFirebase from "@/firebaseInit";
+import FileInput from "../Inputs/FileInput.vue";
 
 import { useRouter } from "vue-router";
-const router = useRouter();
-
+import { useUpdatedFile } from "@/stores/updatedFile";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
-const db = getFirestore(appFirebase);
 
 import { v4 as uuidv4 } from "uuid";
 
+const db = getFirestore(appFirebase);
+
+const storeUpdatedFile = useUpdatedFile();
+
+const router = useRouter();
 const name = ref("");
 const surname = ref("");
 const phone = ref("");
@@ -106,6 +112,9 @@ const birthdate = ref("");
 const idBeneficiary = computed(() => uuidv4());
 
 async function createBeneficiary() {
+  const fileStr = storeUpdatedFile.updatedFileRefStr;
+  const fileUrl = storeUpdatedFile.updatedFileUrl;
+
   try {
     await setDoc(doc(db, "beneficiaries", idBeneficiary.value), {
       name: name.value,
@@ -114,6 +123,10 @@ async function createBeneficiary() {
       age: age.value,
       birthdate: birthdate.value,
       id: idBeneficiary.value,
+      image: {
+        ref: fileStr,
+        url: fileUrl,
+      },
     });
 
     console.log("Document written with ID: ", idBeneficiary.value);
@@ -123,6 +136,8 @@ async function createBeneficiary() {
     phone.value = "";
     age.value = "";
     birthdate.value = "";
+
+    storeUpdatedFile.resetFileStorage();
 
     // TODO - Mostrar mensaje de éxito al crear el beneficiario
     alert("Beneficiario creado correctamente");

@@ -6,7 +6,7 @@ Geus es una plataforma de gestión de usuario, para la administración de regist
 
 - Sobre el registros:
   [ ] Gestionar rutas de navegación con auth guard para que el Dashboard sea accesible solo para usuarios autenticados
-  [ ] Crear formulario de registro
+  [x] Crear formulario de registro
   [ ] Crear formulario de login
   [ ] Crear formulario de recuperación de contraseña
   [ ] Crear formulario de cambio de contraseña

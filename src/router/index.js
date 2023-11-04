@@ -2,6 +2,12 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/Home.vue'
 import About from '@/views/About.vue'
 
+import appFirebase from '@/firebaseInit';
+
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+const auth = getAuth(appFirebase);
+
+
 const routes = [
   {
     path: '/',
@@ -31,17 +37,29 @@ const routes = [
   {
     path: '/dashboard',
     name: 'Dashboard',
-    component: () => import('@/views/Dashboard.vue')
+    component: () => import('@/views/Dashboard.vue'),
+    meta: { requiresAuth: true }
   },
   {
     path: '/create',
     name: 'Create',
-    component: () => import('@/views/Create.vue')
+    component: () => import('@/views/Create.vue'),
+    meta: { requiresAuth: true }
   },
   {
     path: '/beneficiario/:id',
     name: 'Details',
-    component: () => import('@/views/Details.vue')
+    meta: { requiresAuth: true },
+    component: () => import('@/views/Details.vue'),
+    props: true,
+    children: [
+      {
+        path: 'edit',
+        name: 'EditBeneficiary',
+        component: () => import('@/views/Edit.vue'),
+        props: true
+      }
+    ]
   }
 
 ]
@@ -50,5 +68,16 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 })
+
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  const currentUser = auth.currentUser;
+
+  if (requiresAuth && !currentUser) {
+    next('/login');
+  } else {
+    next();
+  }
+});
 
 export default router

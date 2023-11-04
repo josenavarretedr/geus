@@ -20,8 +20,13 @@ onMounted(() => {
         {
           sourceId: "users",
           getItems() {
-            let dataFiltered = storeUser.beneficiaries.filter(({ name }) =>
-              name.toLowerCase().includes(query.toLowerCase())
+            // Aquí solo está filtrando por el nombre, TODO modificar la función para que también busque por apellido
+
+            let dataFiltered = storeUser.beneficiaries.filter(
+              ({ name, surname, phone }) =>
+                name.toLowerCase().includes(query.toLowerCase()) ||
+                surname.toLowerCase().includes(query.toLowerCase()) ||
+                phone.toLowerCase().includes(query.toLowerCase())
             );
 
             return dataFiltered.slice(0, 5);
