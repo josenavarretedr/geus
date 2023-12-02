@@ -47,6 +47,12 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/createStages',
+    name: 'CreateStages',
+    component: () => import('@/views/CreateStages.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/beneficiario/:id',
     name: 'Details',
     meta: { requiresAuth: true },
@@ -54,10 +60,27 @@ const routes = [
     props: true,
     children: [
       {
+        path: '',
+        name: 'SumaryBeneficiary',
+        component: () => import('@/components/Beneficiary/SumaryBeneficiary.vue'),
+        props: true
+      },
+      {
         path: 'edit',
         name: 'EditBeneficiary',
         component: () => import('@/views/Edit.vue'),
         props: true
+      },
+      {
+        path: 'sum',
+        name: 'SumBeneficiary',
+        component: () => import('@/components/Beneficiary/SumBeneficiary.vue'),
+        props: true,
+      }, {
+        path: 'stage-beneficiary',
+        name: 'EditStageBeneficiary',
+        component: () => import('@/components/Beneficiary/EditStageBeneficiary.vue'),
+        props: true,
       }
     ]
   }

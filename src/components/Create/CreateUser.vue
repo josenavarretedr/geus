@@ -75,7 +75,21 @@
         />
       </div>
 
-      <FileInput namePath="docIDs" />
+      <div class="form-group w-full">
+        <FileInput
+          namePath="docIDs"
+          nameUI="Documento de identidad"
+          @fileSelected="capturandoDocIDFile"
+        />
+      </div>
+
+      <div class="form-group group w-full">
+        <FileInput
+          namePath="consentimiento"
+          nameUI="Consentimiento de Uso de Imagen"
+          @fileSelected="capturandoConsentimiento"
+        />
+      </div>
 
       <button
         @click="createBeneficiary()"
@@ -93,14 +107,15 @@ import appFirebase from "@/firebaseInit";
 import FileInput from "../Inputs/FileInput.vue";
 
 import { useRouter } from "vue-router";
-import { useUpdatedFile } from "@/stores/updatedFile";
 import { getFirestore, doc, setDoc } from "firebase/firestore";
+
+import { useBeneficiariesStore } from "@/stores/beneficiaries.js";
+
+const beneficiariesStore = useBeneficiariesStore();
 
 import { v4 as uuidv4 } from "uuid";
 
 const db = getFirestore(appFirebase);
-
-const storeUpdatedFile = useUpdatedFile();
 
 const router = useRouter();
 const name = ref("");
@@ -109,24 +124,56 @@ const phone = ref("");
 const age = ref("");
 const birthdate = ref("");
 
+const docIDFile = ref({
+  ref: "",
+  url: "",
+});
+
+function capturandoDocIDFile(file) {
+  docIDFile.value.ref = file.refFile;
+  docIDFile.value.url = file.downloadURL;
+}
+
+const consentimientoFile = ref({
+  ref: "",
+  url: "",
+});
+
+function capturandoConsentimiento(file) {
+  consentimientoFile.value.ref = file.refFile;
+  consentimientoFile.value.url = file.downloadURL;
+}
+
 const idBeneficiary = computed(() => uuidv4());
 
-async function createBeneficiary() {
-  const fileStr = storeUpdatedFile.updatedFileRefStr;
-  const fileUrl = storeUpdatedFile.updatedFileUrl;
+// Crear un marca de tiempo que pueda ser guardada como string en el documento de firestore y que pueda ser leída como un objeto Date en el front
 
+let timestamp = ref(new Date().toISOString());
+
+async function createBeneficiary() {
   try {
     await setDoc(doc(db, "beneficiaries", idBeneficiary.value), {
       name: name.value,
       surname: surname.value,
       phone: phone.value,
       age: age.value,
-      birthdate: birthdate.value,
       id: idBeneficiary.value,
-      image: {
-        ref: fileStr,
-        url: fileUrl,
-      },
+      progress: [
+        {
+          id: "d22b93df-22a3-494c-9262-7239e5eddedc",
+          completed: true,
+          timestamp: timestamp.value,
+        },
+      ],
+      // birthdate: birthdate.value,
+      // docID: {
+      //   ref: docIDFile.value.ref,
+      //   url: docIDFile.value.url,
+      // },
+      // consetimientoUsoImg: {
+      //   ref: consentimientoFile.value.ref,
+      //   url: consentimientoFile.value.url,
+      // },
     });
 
     console.log("Document written with ID: ", idBeneficiary.value);
@@ -137,11 +184,10 @@ async function createBeneficiary() {
     age.value = "";
     birthdate.value = "";
 
-    storeUpdatedFile.resetFileStorage();
-
     // TODO - Mostrar mensaje de éxito al crear el beneficiario
     alert("Beneficiario creado correctamente");
 
+    await beneficiariesStore.getBeneficiaries();
     router.push({ name: "Dashboard" });
   } catch (e) {
     console.error("Error adding document: ", e);

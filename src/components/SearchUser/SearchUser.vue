@@ -1,15 +1,16 @@
 <script setup lang="jsx">
 import { autocomplete } from "@algolia/autocomplete-js";
 import "@algolia/autocomplete-theme-classic";
-import { useUserStore } from "@/stores/user";
 
 import { ref, onMounted } from "vue";
 
 import { useRouter } from "vue-router";
 
-const router = useRouter();
+import { useBeneficiariesStore } from "@/stores/beneficiaries.js";
 
-const storeUser = useUserStore();
+const beneficiariesStore = useBeneficiariesStore();
+
+const router = useRouter();
 
 onMounted(() => {
   autocomplete({
@@ -22,7 +23,7 @@ onMounted(() => {
           getItems() {
             // Aquí solo está filtrando por el nombre, TODO modificar la función para que también busque por apellido
 
-            let dataFiltered = storeUser.beneficiaries.filter(
+            let dataFiltered = beneficiariesStore.beneficiaries.filter(
               ({ name, surname, phone }) =>
                 name.toLowerCase().includes(query.toLowerCase()) ||
                 surname.toLowerCase().includes(query.toLowerCase()) ||
@@ -58,7 +59,7 @@ onMounted(() => {
 
 document.addEventListener("click", (e) => {
   if (e.target.classList.contains("resultsDiv")) {
-    router.push({ name: "Details", params: { id: e.target.id } });
+    router.push({ name: "SumaryBeneficiary", params: { id: e.target.id } });
   }
 });
 </script>

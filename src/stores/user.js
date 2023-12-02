@@ -1,6 +1,10 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
+import { useBeneficiariesStore } from '@/stores/beneficiaries.js';
+
+const beneficiariesStore = useBeneficiariesStore();
+
 import router from '@/router';
 
 import appFirebase from '@/firebaseInit';
@@ -15,7 +19,6 @@ const auth = getAuth(appFirebase);
 export const useUserStore = defineStore('user', () => {
   const email = ref('');
   const password = ref('');
-  const beneficiaries = ref([]);
 
 
   async function createUser() {
@@ -36,10 +39,10 @@ export const useUserStore = defineStore('user', () => {
       const userCredential = await signInWithEmailAndPassword(auth, email.value, password.value);
       const user = userCredential.user;
       console.log('User signed in: ', user);
-
-      beneficiaries.value = await getBeneficiaries();
+      await beneficiariesStore.getBeneficiaries();
 
       router.push('/dashboard');
+      console.log('Beneficiaries: ', beneficiariesStore.beneficiaries);
     } catch (error) {
       console.error('Error signing in: ', error);
     }
@@ -55,21 +58,5 @@ export const useUserStore = defineStore('user', () => {
     }
   }
 
-  async function getBeneficiaries() {
-    const querySnapshot = await getDocs(collection(db, "beneficiaries"));
-
-    let results = [];
-
-    querySnapshot.forEach((doc) => {
-      results.push(doc.data());
-    });
-
-    return results;
-  }
-
-  function getBeneficiary(id) {
-    return beneficiaries.value.find(beneficiary => beneficiary.id === id);
-  }
-
-  return { email, password, beneficiaries, signIn, createUser, signOutUser, getBeneficiary };
+  return { email, password, signIn, createUser, signOutUser };
 });
