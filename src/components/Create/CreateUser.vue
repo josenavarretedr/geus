@@ -75,7 +75,7 @@
         />
       </div>
 
-      <div class="form-group w-full">
+      <!-- <div class="form-group w-full">
         <FileInput
           namePath="docIDs"
           nameUI="Documento de identidad"
@@ -89,10 +89,10 @@
           nameUI="Consentimiento de Uso de Imagen"
           @fileSelected="capturandoConsentimiento"
         />
-      </div>
+      </div> -->
 
       <button
-        @click="createBeneficiary()"
+        @click="createBeneficiaryUI()"
         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
       >
         Crear
@@ -102,96 +102,50 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import appFirebase from "@/firebaseInit";
-import FileInput from "../Inputs/FileInput.vue";
-
-import { useRouter } from "vue-router";
-import { getFirestore, doc, setDoc } from "firebase/firestore";
+import { ref } from "vue";
 
 import { useBeneficiariesStore } from "@/stores/beneficiaries.js";
 
 const beneficiariesStore = useBeneficiariesStore();
 
-import { v4 as uuidv4 } from "uuid";
-
-const db = getFirestore(appFirebase);
-
-const router = useRouter();
 const name = ref("");
 const surname = ref("");
 const phone = ref("");
 const age = ref("");
 const birthdate = ref("");
 
-const docIDFile = ref({
-  ref: "",
-  url: "",
-});
+// const docIDFile = ref({
+//   ref: "",
+//   url: "",
+// });
 
-function capturandoDocIDFile(file) {
-  docIDFile.value.ref = file.refFile;
-  docIDFile.value.url = file.downloadURL;
-}
+// function capturandoDocIDFile(file) {
+//   docIDFile.value.ref = file.refFile;
+//   docIDFile.value.url = file.downloadURL;
+// }
 
-const consentimientoFile = ref({
-  ref: "",
-  url: "",
-});
+// const consentimientoFile = ref({
+//   ref: "",
+//   url: "",
+// });
 
-function capturandoConsentimiento(file) {
-  consentimientoFile.value.ref = file.refFile;
-  consentimientoFile.value.url = file.downloadURL;
-}
-
-const idBeneficiary = computed(() => uuidv4());
-
-// Crear un marca de tiempo que pueda ser guardada como string en el documento de firestore y que pueda ser leída como un objeto Date en el front
+// function capturandoConsentimiento(file) {
+//   consentimientoFile.value.ref = file.refFile;
+//   consentimientoFile.value.url = file.downloadURL;
+// }
 
 let timestamp = ref(new Date().toISOString());
 
-async function createBeneficiary() {
-  try {
-    await setDoc(doc(db, "beneficiaries", idBeneficiary.value), {
-      name: name.value,
-      surname: surname.value,
-      phone: phone.value,
-      age: age.value,
-      id: idBeneficiary.value,
-      progress: [
-        {
-          id: "d22b93df-22a3-494c-9262-7239e5eddedc",
-          completed: true,
-          timestamp: timestamp.value,
-        },
-      ],
-      // birthdate: birthdate.value,
-      // docID: {
-      //   ref: docIDFile.value.ref,
-      //   url: docIDFile.value.url,
-      // },
-      // consetimientoUsoImg: {
-      //   ref: consentimientoFile.value.ref,
-      //   url: consentimientoFile.value.url,
-      // },
-    });
-
-    console.log("Document written with ID: ", idBeneficiary.value);
-
-    name.value = "";
-    surname.value = "";
-    phone.value = "";
-    age.value = "";
-    birthdate.value = "";
-
-    // TODO - Mostrar mensaje de éxito al crear el beneficiario
-    alert("Beneficiario creado correctamente");
-
-    await beneficiariesStore.getBeneficiaries();
-    router.push({ name: "Dashboard" });
-  } catch (e) {
-    console.error("Error adding document: ", e);
-  }
+function createBeneficiaryUI() {
+  beneficiariesStore.createBeneficiary({
+    name: name.value,
+    surname: surname.value,
+    phone: phone.value,
+    age: age.value,
+    birthdate: birthdate.value,
+    timestamp: timestamp.value,
+  });
+  console.log("Creando beneficiario");
 }
 </script>
 

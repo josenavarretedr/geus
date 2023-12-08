@@ -98,7 +98,7 @@
         </select>
       </div>
       <button
-        @click="createStage"
+        @click="createStageUI"
         class="w-full px-4 py-2 mt-4 text-white bg-blue-500 rounded-md hover:bg-blue-600"
       >
         Crear etapa
@@ -109,7 +109,6 @@
 
 <script setup>
 import { onMounted, ref, watch } from "vue";
-import { useRouter } from "vue-router";
 import BtnPreviewPage from "@/components/Navigation/BtnPreviewPage.vue";
 
 import {
@@ -122,15 +121,14 @@ import {
 
 import appFirebase from "@/firebaseInit";
 
+import { useStageStore } from "../stores/stages";
+
+const stageStore = useStageStore();
+
 const db = getFirestore(appFirebase);
 
 const programStagesRef = collection(db, "programStages");
 
-import { v4 as uuidv4 } from "uuid";
-
-const router = useRouter();
-
-let idStage = uuidv4();
 // Generar los let para nameUI, descriptionUI, typeStage, evidence, stageProgram, requirement
 
 let nameUI = ref("");
@@ -148,42 +146,12 @@ let stageProgram = ref([
 
 let stageProgramSelected = ref("Convocatoria");
 
-//TODO Este requerimiento tiene que ser una llamada a la base de datos para los documentos de "programStages" en firsestore y que muestre un select con los documentos que existen en la base de datos de firestore
-
-// Por ahora se simulará una data que es la siguiente:
-
-let requirementOptionsAPI = ref([
-  // {
-  //   nameUI: "Convocatoria - Datos básicos",
-  //   id: "convocatoriaProceso",
-  //   stageProgram: "Convocatoria",
-  // },
-  //,
-  // {
-  //   nameUI: "Autorización de uso de Datos",
-  //   id: "autorizacionDatosProceso",
-  //   stageProgram: "Convocatoria",
-  // },
-  // {
-  //   nameUI: "Documento de identidad",
-  //   id: "docIdentidadProceso",
-  //   stageProgram: "Convocatoria",
-  // },
-  // {
-  //   nameUI: "Selección de beneficiario",
-  //   id: "seleccionBeneficiarioProceso",
-  //   stageProgram: "Selección",
-  // },
-]);
+let requirementOptionsAPI = ref([]);
 
 let requirementOptions = ref([]);
 
 let requirementSelected = ref("");
 
-/**
- * Watches the changes in the selected stage program and updates the requirement options accordingly.
- * @param {string} newVal - The new value of the selected stage program.
- */
 watch(stageProgramSelected, (newVal) => {
   requirementOptions.value = requirementOptionsAPI.value.filter(
     (option) => option.stageProgram === newVal
@@ -199,10 +167,6 @@ watch(stageProgramSelected, (newVal) => {
   }
   requirementSelected.value = requirementOptions.value[0];
 });
-
-/**
- * Gets the data from the database and sets the requirement options.
- */
 
 onMounted(async () => {
   const querySnapshot = await getDocs(programStagesRef);
@@ -224,25 +188,15 @@ onMounted(async () => {
   requirementSelected.value = requirementOptions.value[0];
 });
 
-/**
- * Creates a new stage with the provided data and saves it to the database.
- * @returns {Promise<void>} A promise that resolves when the stage is successfully created.
- */
-const createStage = async () => {
-  const stage = {
+function createStageUI() {
+  stageStore.createStage({
     nameUI: nameUI.value,
     descriptionUI: descriptionUI.value,
     typeStage: typeStage.value,
     evidence: evidence.value,
     stageProgram: stageProgramSelected.value,
-    requirement: {
-      nameUI: requirementSelected.value.nameUI,
-      id: requirementSelected.value.id,
-    },
-    id: idStage,
-  };
-
-  await setDoc(doc(db, "programStages", idStage), stage);
-  router.push("/dashboard");
-};
+    nameUIRequirement: requirementSelected.value.nameUI,
+    idRequirement: requirementSelected.value.id,
+  });
+}
 </script>
