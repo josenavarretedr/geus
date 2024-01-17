@@ -5,14 +5,33 @@
       <input type="file" @change="uploadFile" :id="namePath" />
     </div>
     <div class="feedback">
-      <div class="feedbackText text-xs text-green-500" v-if="successUpdate">
-        ✅ Subido correctamente <br />
-        <span class="text-gray-400 text-xs">
+      <div
+        class="feedbackText text-xs text-green-500"
+        v-if="successUpdate"
+      >
+        <p>
+          ✅ Subido correctamente <br />
+        <p class="text-gray-400 text-xs">
           Si deseas cambiar el archivo, seleeciona uno nuevo y se reemplazará.
           <br />
           Si deseas eliminar el archivo, haz click aquí:
-        </span>
-        <span @click="deleteFile(e)" class="cursor-pointer">❌</span>.
+          <span @click="deleteFile(e)" class="cursor-pointer">❌</span>.
+        </p>
+        </p>
+        <div id="previewFile" class="w-full border-green-300">
+          <template v-if="refFile.endsWith('.pdf')">
+            <a :href="downloadURL" target="_blank">
+              <i class="far fa-file-pdf"></i> PDF
+            </a>
+          </template>
+          <template v-else>
+            <a :href="downloadURL" target="_blank">
+              <div class="flex justify-center items-center">
+                <img :src="downloadURL" alt="Preview" width="300" height="300" class="" />
+              </div>
+            </a>
+          </template>
+        </div>
       </div>
       <div class="feedbackText text-red-500 text-xs" v-if="errorUpdate">
         ⁉ Error al subir el archivo
@@ -65,6 +84,10 @@ async function uploadFile(event) {
   try {
     const file = event.target.files[0];
 
+    if (downloadURL.value && refFile.value) {
+      await deleteFile();
+    }
+
     const fileRef = refStorage(storage, `${props.namePath}/${file.name}`);
 
     const uploadTask = uploadBytesResumable(fileRef, file);
@@ -73,26 +96,14 @@ async function uploadFile(event) {
       (snapshot) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        // document.querySelector(".progressBar-item"
-        // ).style.width = `${progress}%`;
         if (progress === 100) {
-          // document.querySelector(".progressBar-item").style.color = "#fff";
-          // document.querySelector(".progressBar-item").style.backgroundColor =
-          //   "#1e9813";
-
-          // document.querySelector(".container").style.border =
-          //   "1px solid #1e9813";
           successUpdate.value = true;
         } else {
-          // document.querySelector(".progressBar-item").innerHTML = `${Math.round(
-          //   progress
-          // )}%`;
-          // document.querySelector(".progressBar-item").style.backgroundColor =
-          //   "#bebebe";
         }
       },
       (error) => {
         errorUpdate.value = true;
+        console.log(error.message);
         // Handle unsuccessful uploads
       },
       async () => {
@@ -107,23 +118,20 @@ async function uploadFile(event) {
   }
 }
 
-function deleteFile() {
-  const desertRef = refStorage(storage, refFile.value);
-  deleteObject(desertRef)
-    .then(() => {
-      downloadURL.value = "";
-      refFile.value = "";
-      successUpdate.value = false;
-      emit("fileSelected", { refFile, downloadURL });
+async function deleteFile() {
+  try {
+    const desertRef = refStorage(storage, refFile.value);
+    await deleteObject(desertRef);
+    downloadURL.value = "";
+    refFile.value = "";
+    successUpdate.value = false;
+    emit("fileSelected", { refFile, downloadURL });
 
-      const inputFile = document.getElementById(props.namePath);
-      console.log(inputFile.value);
-
-      inputFile.value = "";
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+    const inputFile = document.getElementById(props.namePath);
+    inputFile.value = "";
+  } catch (error) {
+    console.log(error);
+  }
 }
 </script>
 

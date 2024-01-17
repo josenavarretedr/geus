@@ -81,6 +81,11 @@ const routes = [
         name: 'EditStageBeneficiary',
         component: () => import('@/components/Beneficiary/EditStageBeneficiary.vue'),
         props: true,
+      },
+      {
+        path: 'stage-beneficiary/:idStage',
+        name: 'StageBeneficiary',
+        component: () => import('@/components/Beneficiary/StageBeneficiary.vue'),
       }
     ]
   }

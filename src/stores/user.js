@@ -2,6 +2,9 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
 import { useBeneficiariesStore } from '@/stores/beneficiaries.js';
+import { useStageStore } from "@/stores/stages.js";
+
+const stageStore = useStageStore();
 
 const beneficiariesStore = useBeneficiariesStore();
 
@@ -40,6 +43,7 @@ export const useUserStore = defineStore('user', () => {
       const user = userCredential.user;
       console.log('User signed in: ', user);
       await beneficiariesStore.getBeneficiaries();
+      await stageStore.getStages();
 
       router.push('/dashboard');
       console.log('Beneficiaries: ', beneficiariesStore.beneficiaries);

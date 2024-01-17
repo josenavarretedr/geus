@@ -7,7 +7,7 @@ import router from '@/router';
 import appFirebase from '@/firebaseInit';
 
 import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { getFirestore, collection, setDoc, getDocs, doc } from "firebase/firestore";
+import { getFirestore, collection, setDoc, getDocs, doc, updateDoc, arrayUnion } from "firebase/firestore";
 
 const db = getFirestore(appFirebase);
 const auth = getAuth(appFirebase);
@@ -20,6 +20,8 @@ export const useBeneficiariesStore = defineStore('beneficiaries', () => {
   const surname = ref('');
   const dni = ref('');
   const email = ref('');
+
+
 
   async function getBeneficiaries() {
     // TODO se tendría que gestionar para que se obtengan solo los beneficiarios que esean de la región que consulta el usuario logeado
@@ -35,7 +37,21 @@ export const useBeneficiariesStore = defineStore('beneficiaries', () => {
     return beneficiaries.value.find(beneficiary => beneficiary.id === id);
   }
 
-  async function createBeneficiary({ name, surname, phone, age, birthdate, timestamp }) {
+  async function createBeneficiary({
+    name,
+    surname,
+    phone,
+    age,
+    birthdate,
+    timestamp,
+    sex,
+    isPregnant,
+    isLactating,
+    gender,
+    nationality,
+    docID,
+    numDocID,
+  }) {
     try {
       const idBeneficiary = uuidv4();
 
@@ -45,9 +61,17 @@ export const useBeneficiariesStore = defineStore('beneficiaries', () => {
         phone,
         age,
         id: idBeneficiary,
+        birthdate,
+        sex,
+        isPregnant,
+        isLactating,
+        gender,
+        nationality,
+        docID,
+        numDocID,
         progress: [
           {
-            id: "d22b93df-22a3-494c-9262-7239e5eddedc",
+            id: "94421b49-fda1-4006-a03d-d70e2466fdba",
             completed: true,
             timestamp: timestamp,
           },
@@ -63,6 +87,23 @@ export const useBeneficiariesStore = defineStore('beneficiaries', () => {
     }
   }
 
+  async function updateProgressOfBeneficiary(idBeneficiary, progress) {
+    const beneficiary = getBeneficiary(idBeneficiary);
+    try {
+      if (beneficiary) {
+        beneficiary.progress.push(progress);
+
+        let beneficiaryRef = doc(db, "beneficiaries", idBeneficiary);
+
+        await updateDoc(beneficiaryRef, {
+          progress: beneficiary.progress
+        });
+      }
+    } catch (e) {
+      console.error("Error updating document: ", e);
+    }
+  }
+
   return {
     beneficiaries,
     beneficiary,
@@ -71,7 +112,8 @@ export const useBeneficiariesStore = defineStore('beneficiaries', () => {
     dni,
     email,
     getBeneficiaries,
-    getBeneficiary, createBeneficiary
+    getBeneficiary, createBeneficiary,
+    updateProgressOfBeneficiary
   }
 
 }

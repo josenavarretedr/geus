@@ -1,3 +1,4 @@
+import { ref } from 'vue';
 
 import { defineStore } from 'pinia';
 
@@ -5,7 +6,7 @@ import router from '@/router';
 
 import appFirebase from '@/firebaseInit';
 
-import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, getDocs, setDoc, collection, updateDoc, arrayUnion } from "firebase/firestore";
 
 const db = getFirestore(appFirebase);
 
@@ -15,32 +16,16 @@ import { v4 as uuidv4 } from "uuid";
 
 export const useStageStore = defineStore('stages', () => {
 
-
-  /**
-   * Creates a stage with the given parameters.
-   * @param {Object} options - The options for creating the stage.
-   * @param {string} options.nameUI - The name of the stage.
-   * @param {string} options.descriptionUI - The description of the stage.
-   * @param {string} options.typeStage - The type of the stage.
-   * @param {string} options.evidence - The evidence for the stage.
-   * @param {string} options.stageProgram - The program for the stage.
-   * @param {string} options.nameUIRequirement - The name of the requirement.
-   * @param {string} options.idRequirement - The ID of the requirement.
-   * @returns {Promise<void>} - A promise that resolves when the stage is created.
-   */
-  async function createStage({ nameUI, descriptionUI, typeStage, evidence, stageProgram, nameUIRequirement, idRequirement }) {
+  const allProgramStages = ref([]);
+  async function createStage({ nameUI, descriptionUI, typeStage, stageProgram, idRequirement }) {
     try {
       let idStage = uuidv4();
       const stage = {
         nameUI: nameUI,
         descriptionUI: descriptionUI,
         typeStage: typeStage,
-        evidence: evidence,
         stageProgram: stageProgram,
-        requirement: {
-          nameUIRequirement: nameUIRequirement,
-          idRequirement: idRequirement,
-        },
+        requirement: idRequirement,
         id: idStage,
       };
       await setDoc(doc(db, "programStages", idStage), stage);
@@ -51,16 +36,41 @@ export const useStageStore = defineStore('stages', () => {
     }
   };
 
-
-  async function getStageInfo(stageID) {
+  async function getStages() {
     try {
-      const docRef = await getDoc(doc(db, "programStages", stageID));
-      const data = docRef.data();
-      return data;
+      const querySnapshot = await getDocs(collection(db, "programStages"));
+      const stages = [];
+      querySnapshot.forEach((doc) => {
+        stages.push(doc.data());
+      });
+      allProgramStages.value = stages;
+      console.log('All stages: ', allProgramStages.value);
     } catch (error) {
-      console.error('Error getting stages data: ', error);
+      console.error('Error getting all stages: ', error);
     }
   }
 
-  return { getStageInfo, createStage };
+  function getOneStageById(id) {
+    console.log(id)
+    const stage = allProgramStages.value.find(stage => stage.id === id);
+    return stage;
+  }
+
+  function getNextStage(id) {
+    const nextStage = allProgramStages.value.find(stage => stage.requirement === id);
+    return nextStage;
+  }
+
+  async function updateBeneficiariesInStage(idStage, idBeneficiary) {
+    try {
+      const stageRef = doc(db, "programStages", idStage);
+      await updateDoc(stageRef, {
+        beneficiaries: arrayUnion(idBeneficiary)
+      });
+    } catch (error) {
+      console.error('Error updating beneficiaries in stage: ', error);
+    }
+  }
+
+  return { createStage, getStages, getOneStageById, getNextStage, updateBeneficiariesInStage };
 });

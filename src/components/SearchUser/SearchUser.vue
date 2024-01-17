@@ -12,6 +12,8 @@ const beneficiariesStore = useBeneficiariesStore();
 
 const router = useRouter();
 
+// TODO Hacer un loading para que no se vea el tiempo de carga de Algolia
+
 onMounted(() => {
   autocomplete({
     container: "#autocomplete",

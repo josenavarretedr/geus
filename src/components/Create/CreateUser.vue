@@ -54,12 +54,61 @@
       </div>
 
       <div class="form-group">
-        <label for="age" class="mr-2">Edad:</label>
+        <label for="sex" class="mr-2">Sexo:</label>
+        <select
+          id="sex"
+          name="sex"
+          v-model="sexSelected"
+          class="border rounded py-1 px-2"
+        >
+          <option v-for="option in sexOptions" :value="option">
+            {{ option }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="gender" class="mr-2">Género:</label>
+        <select
+          id="gender"
+          name="gender"
+          v-model="genderSelected"
+          class="border rounded py-1 px-2"
+        >
+          <option v-for="option in genderOptions" :value="option">
+            {{ option }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group" v-if="genderSelected === 'Otro'">
+        <label for="otherGender" class="mr-2">Especificar otro género:</label>
         <input
           type="text"
-          id="age"
-          name="age"
-          v-model="age"
+          id="otherGender"
+          name="otherGender"
+          v-model="genderSelectedOther"
+          class="border rounded py-1 px-2"
+        />
+      </div>
+
+      <div class="form-group" v-if="sexSelected === 'Femenino'">
+        <label for="isPregnant" class="mr-2">¿Está embarazada?</label>
+        <input
+          type="checkbox"
+          id="isPregnant"
+          name="isPregnant"
+          v-model="isPregnant"
+          class="border rounded py-1 px-2"
+        />
+      </div>
+      <div class="form-group" v-if="sexSelected === 'Femenino'">
+        <label for="isLactating" class="mr-2">¿Está lantando?</label>
+        <input
+          type="checkbox"
+          id="isLactating"
+          name="isLactating"
+          v-model="isLactating"
           class="border rounded py-1 px-2"
         />
       </div>
@@ -75,21 +124,57 @@
         />
       </div>
 
-      <!-- <div class="form-group w-full">
-        <FileInput
-          namePath="docIDs"
-          nameUI="Documento de identidad"
-          @fileSelected="capturandoDocIDFile"
+      <div class="form-group">
+        <label for="nationality" class="mr-2">Nacionalidad:</label>
+        <select
+          id="nationality"
+          name="nationality"
+          v-model="nationalitySelected"
+          class="border rounded py-1 px-2"
+        >
+          <option v-for="option in nationalityOptions" :value="option">
+            {{ option }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group" v-if="nationalitySelected === 'Otro'">
+        <label for="otherNationality" class="mr-2"
+          >Especificar otra nacionalidad:</label
+        >
+        <input
+          type="text"
+          id="otherNationality"
+          name="otherNationality"
+          v-model="nationalitySelectedOther"
+          class="border rounded py-1 px-2"
         />
       </div>
 
-      <div class="form-group group w-full">
-        <FileInput
-          namePath="consentimiento"
-          nameUI="Consentimiento de Uso de Imagen"
-          @fileSelected="capturandoConsentimiento"
+      <div class="form-group">
+        <label for="docID" class="mr-2">Documento de identidad:</label>
+        <select
+          id="docID"
+          name="docID"
+          v-model="docIDSelected"
+          class="border rounded py-1 px-2"
+        >
+          <option v-for="option in docOptionsFilter" :value="option">
+            {{ option }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="numDocID" class="mr-2">Num doc ID:</label>
+        <input
+          type="text"
+          id="numDocID"
+          name="numDocID"
+          v-model="numDocID"
+          class="border rounded py-1 px-2"
         />
-      </div> -->
+      </div>
 
       <button
         @click="createBeneficiaryUI()"
@@ -102,7 +187,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 import { useBeneficiariesStore } from "@/stores/beneficiaries.js";
 
@@ -111,28 +196,59 @@ const beneficiariesStore = useBeneficiariesStore();
 const name = ref("");
 const surname = ref("");
 const phone = ref("");
-const age = ref("");
 const birthdate = ref("");
 
-// const docIDFile = ref({
-//   ref: "",
-//   url: "",
-// });
+const age = computed(() => {
+  const today = new Date();
+  const birthdateValue = new Date(birthdate.value);
+  let age = today.getFullYear() - birthdateValue.getFullYear();
+  const monthDifference = today.getMonth() - birthdateValue.getMonth();
+  if (
+    monthDifference < 0 ||
+    (monthDifference === 0 && today.getDate() < birthdateValue.getDate())
+  ) {
+    age--;
+  }
+  return Math.floor(age);
+});
 
-// function capturandoDocIDFile(file) {
-//   docIDFile.value.ref = file.refFile;
-//   docIDFile.value.url = file.downloadURL;
-// }
+const sexOptions = ref(["Masculino", "Femenino", "Intersexual"]);
 
-// const consentimientoFile = ref({
-//   ref: "",
-//   url: "",
-// });
+const sexSelected = ref(null);
 
-// function capturandoConsentimiento(file) {
-//   consentimientoFile.value.ref = file.refFile;
-//   consentimientoFile.value.url = file.downloadURL;
-// }
+const isPregnant = ref(false);
+const isLactating = ref(false);
+
+const genderOptions = ref(["Hombre", "Mujer", "Prefiero no decirlo", "Otro"]);
+
+const genderSelected = ref(null);
+const genderSelectedOther = ref(null);
+
+const nationalityOptions = ref(["Venezolano", "Peruano", "Otro"]);
+const nationalitySelected = ref(null);
+const nationalitySelectedOther = ref(null);
+
+const docIDOptions = ref([
+  "DNI",
+  "Cédula",
+  "Pasaporte",
+  "CPP",
+  "Carne de Extranjería",
+]);
+
+const docOptionsFilter = computed(() => {
+  if (
+    nationalitySelected.value === "Venezolano" ||
+    nationalitySelected.value === "Otro"
+  ) {
+    return docIDOptions.value.filter((option) => option !== "DNI");
+  } else {
+    return docIDOptions.value.filter((option) => option === "DNI");
+  }
+});
+
+const docIDSelected = ref(null);
+const numDocID = ref(null);
 
 let timestamp = ref(new Date().toISOString());
 
@@ -144,8 +260,20 @@ function createBeneficiaryUI() {
     age: age.value,
     birthdate: birthdate.value,
     timestamp: timestamp.value,
+    sex: sexSelected.value,
+    isPregnant: isPregnant.value,
+    isLactating: isLactating.value,
+    gender:
+      genderSelected.value === "Otro"
+        ? genderSelectedOther.value
+        : genderSelected.value,
+    nationality:
+      nationalitySelected.value === "Otro"
+        ? nationalitySelectedOther.value
+        : nationalitySelected.value,
+    docID: docIDSelected.value,
+    numDocID: numDocID.value,
   });
-  console.log("Creando beneficiario");
 }
 </script>
 
