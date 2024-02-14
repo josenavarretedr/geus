@@ -40,7 +40,7 @@ import { computed } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 
-const idUser = router.currentRoute.value.params.id;
+const idUser = router.currentRoute.value.params.idBeneficiary;
 
 import { useBeneficiariesStore } from "@/stores/beneficiaries.js";
 

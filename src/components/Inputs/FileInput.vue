@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, defineEmits } from "vue";
+import { defineProps, ref, defineEmits, onMounted } from "vue";
 
 import appFirebase from "@/firebaseInit";
 

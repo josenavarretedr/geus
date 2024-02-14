@@ -3,7 +3,7 @@
     <h1>
       {{ getOneStageByIdUI.nameUI }}
     </h1>
-
+    <!-- TODO se tiene que enviar un promp para que identifique si el beneficiario ya tiene ese "stageId" en el campo "progress" una vez identificado en el componente debe de jugar con el successUpdate o agregar otro verificador como "previusFile" -->
     <FileInput
       v-if="getOneStageByIdUI.typeStage === 'evidence'"
       :namePath="getStringToCamelCase(getOneStageByIdUI.nameUI)"
@@ -58,7 +58,7 @@ const stageStore = useStageStore();
 const beneficiariesStore = useBeneficiariesStore();
 
 // Inicializamos el ID del beneficiario actual
-const idUser = router.currentRoute.value.params.id;
+const idUser = router.currentRoute.value.params.idBeneficiary;
 
 const idStage = router.currentRoute.value.params.idStage;
 

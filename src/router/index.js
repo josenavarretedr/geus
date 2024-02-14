@@ -53,7 +53,7 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
-    path: '/beneficiario/:id',
+    path: '/beneficiario/:idBeneficiary',
     name: 'Details',
     meta: { requiresAuth: true },
     component: () => import('@/views/Details.vue'),
@@ -70,6 +70,16 @@ const routes = [
         name: 'EditBeneficiary',
         component: () => import('@/views/Edit.vue'),
         props: true
+      },
+      {
+        path: 'monitory',
+        name: 'MonitoryBeneficiary',
+        component: () => import('@/components/Beneficiary/MonitoryBeneficiary.vue'),
+      },
+      {
+        path: 'monitory/add',
+        name: 'AddMonitoryBeneficiary',
+        component: () => import('@/components/Monitory/MonitoryForm.vue'),
       },
       {
         path: 'sum',

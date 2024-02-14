@@ -61,7 +61,10 @@ onMounted(() => {
 
 document.addEventListener("click", (e) => {
   if (e.target.classList.contains("resultsDiv")) {
-    router.push({ name: "SumaryBeneficiary", params: { id: e.target.id } });
+    router.push({
+      name: "SumaryBeneficiary",
+      params: { idBeneficiary: e.target.id },
+    });
   }
 });
 </script>
