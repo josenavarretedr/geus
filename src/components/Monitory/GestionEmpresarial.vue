@@ -90,154 +90,133 @@ const areNull = ref(false);
 
 const componentMonitoryForm = ref([
   {
-    component: "Persona y Familia",
-    description: "Se evalúa la situación de la persona y su familia",
+    component: "Gestion Empresarial",
+    description: "Evalúa la gestión empresarial del emprendimiento",
     evaluationCriterion: [
       {
-        name: "Suficiencia de Ingresos para Acceso a Servicios de Salud",
-        item: "Evalúe la suficiencia de los ingresos generados por el emprendimiento para que el emprendedor y su núcleo familiar puedan acceder a servicios de salud, tales como citas médicas particulares, compra de medicamentos, afiliación a salud, entre otros.",
+        name: "Claridad en la definición de objetivos",
+        item: "El emprendedor tiene metas u objetivos claramente definidos a corto y largo plazo. Estos objetivos pueden estar relacionados con mejoras operativas, ventas o acciones en marcha, así como también con el futuro del emprendimiento, abarcando aspectos como ubicación y capacidad operativa.",
         scaleToolTip: [
           {
             value: 0,
             description:
-              "Los ingresos no son suficientes para cubrir servicios de salud esenciales.",
+              "Ausencia total de claridad en la definición de metas y objetivos a corto y largo plazo.",
           },
           {
             value: 1,
             description:
-              "Los ingresos son parcialmente suficientes, pero aún limitan el acceso a algunos servicios de salud.",
+              "Presencia parcial de claridad, pero con variabilidad y posibles confusiones.",
           },
           {
             value: 2,
             description:
-              "Los ingresos son suficientes para acceder a la mayoría o a todos los servicios de salud necesarios.",
+              "Presencia completa de claridad en la definición de metas y objetivos.",
           },
         ],
       },
       {
-        name: "Suficiencia de Ingresos para Alimentación Familiar",
-        item: "Evalúe si los ingresos generados por el emprendimiento permiten al emprendedor comprar alimentos suficientes para él y su núcleo familiar.",
+        name: "Proyección de Mejoras Empresariales",
+        item: "Indique si el emprendedor tiene proyectado realizar alguna mejora relacionada al área de trabajo, imagen, producto, servicio, u otras áreas pertinentes a su emprendimiento",
         scaleToolTip: [
           {
             value: 0,
             description:
-              "Los ingresos no son suficientes para cubrir la compra de alimentos básicos.",
+              "Ausencia total de proyecciones para realizar mejoras en el área de trabajo, imagen, producto, servicio, u otras áreas pertinentes.",
           },
           {
             value: 1,
             description:
-              "Los ingresos son parcialmente suficientes, pero limitan la capacidad de comprar alimentos de manera adecuada.",
+              "Presencia parcial de proyecciones; se observan indicios de consideración para mejoras, pero no está claramente definido.",
           },
           {
             value: 2,
             description:
-              "Los ingresos son suficientes para adquirir todos los alimentos necesarios para el emprendedor y su familia.",
+              "Presencia completa de proyecciones; el emprendedor tiene planes definidos y específicos para realizar mejoras en diversas áreas relacionadas con su emprendimiento.",
           },
         ],
       },
       /**
       {
-        name: "Suficiencia de Ingresos para Acceso a Vivienda Adecuada",
-        item: "Evalúe si los ingresos generados por el emprendimiento permiten al emprendedor acceder a una vivienda con un espacio adecuado que satisfaga sus necesidades y las de su núcleo familiar.",
+        name: "Estandarización de Procesos Empresariales",
+        item: "Evalúe si el emprendimiento tiene pautas claras, manuales o procesos establecidos para la producción o prestación de servicios.",
         scaleToolTip: [
           {
             value: 0,
             description:
-              "Los ingresos no son suficientes para acceder a una vivienda adecuada.",
+              "Ausencia total de pautas, manuales o procesos estandarizados para la producción o prestación de servicios. No se observan procesos definidos.",
           },
           {
             value: 1,
             description:
-              "Los ingresos son parcialmente suficientes, pero limitan la capacidad de obtener una vivienda que satisfaga todas las necesidades.",
+              "Presencia parcial de pautas, manuales o procesos, pero no completamente estandarizados. Existen algunos elementos, pero la estandarización es limitada.",
           },
           {
             value: 2,
             description:
-              "Los ingresos son suficientes para acceder a una vivienda con un espacio adecuado que satisface plenamente las necesidades del emprendedor y su familia.",
+              "Presencia completa de pautas, manuales o procesos totalmente estandarizados para la producción o prestación de servicios. Los procesos están claramente definidos y siguen estándares específicos.",
           },
         ],
       },
       {
-        name: "Contribución de Ingresos al Pago de Alquiler y Servicios Básicos",
-        item: "Evalúe si los ingresos generados por el emprendimiento contribuyen al pago del alquiler y servicios básicos para el hogar, incluyendo agua, luz y gas",
+        name: "Claridad en Funciones y Responsabilidades",
+        item: "Evalúe si en el emprendimiento hay una clara definición de funciones y responsabilidades para los trabajadores, colaboradores ocasionales y el emprendedor",
         scaleToolTip: [
           {
             value: 0,
             description:
-              "Los ingresos no contribuyen al pago del alquiler ni a los servicios básicos del hogar.",
+              "No hay una clara definición de funciones y responsabilidades. Las tareas asignadas no están bien definidas.",
           },
           {
             value: 1,
             description:
-              "Los ingresos contribuyen parcialmente, pero de manera limitada, al pago del alquiler y servicios básicos.",
+              "Existe una definición parcial de funciones y responsabilidades, pero la claridad es limitada. Puede haber cierta ambigüedad en las tareas asignadas.",
           },
           {
             value: 2,
             description:
-              "Los ingresos contribuyen significativamente al pago del alquiler y cubren los servicios básicos del hogar de manera adecuada.",
+              "Hay una definición clara de funciones y responsabilidades para los trabajadores, colaboradores ocasionales y el emprendedor. Todas las tareas están claramente definidas y comprendidas por todos los involucrados.",
           },
         ],
       },
       {
-        name: "Suficiencia de Ingresos para Acceso a Educación",
-        item: "Evalúe si los ingresos generados por el emprendimiento son suficientes para que usted y su núcleo familiar puedan acceder a servicios de educación, incluyendo cursos especializados, diplomados o talleres. En el caso de tener hijos, considere la matrícula y la adquisición de útiles escolares.",
+        name: "Protocolo de Atención al Cliente",
+        item: "Evalúe si en el emprendimiento existe un protocolo claro para atender al cliente, tanto en la presentación de servicios como en el proceso de compra de productos/servicios",
         scaleToolTip: [
           {
             value: 0,
             description:
-              "Los ingresos no son suficientes para cubrir servicios educativos ni gastos asociados a la educación de los hijos.",
+              "Ausencia total de un protocolo establecido para atender al cliente. No hay pautas definidas para la presentación de servicios ni en el proceso de compra.",
           },
           {
             value: 1,
             description:
-              "Los ingresos son parcialmente suficientes, pero limitan el acceso a algunos servicios educativos y gastos escolares.",
+              "Presencia parcial de un protocolo, pero la claridad y consistencia son limitadas. Puede haber cierta falta de coherencia en la atención al cliente.",
           },
           {
             value: 2,
             description:
-              "Los ingresos son suficientes para acceder a la mayoría o todos los servicios educativos necesarios, incluyendo la educación de los hijos y la adquisición de útiles escolares.",
+              "Presencia completa de un protocolo claro y establecido para atender al cliente en la presentación de servicios y durante el proceso de compra de productos/servicios. Las pautas son claras y se aplican de manera consistente.",
           },
         ],
       },
       {
-        name: "Suficiencia de Ingresos para Electrodomésticos y Mantenimiento",
-        item: "Evalúe si los ingresos generados por el emprendimiento permiten al emprendedor acceder a la adquisición de electrodomésticos para el hogar o al mantenimiento de los mismos, tales como nevera, lavadora, computadora, televisor, entre otros.",
+        name: "Registro Financiero Actualizado",
+        item: "Evalúe si el emprendimiento mantiene un registro actualizado de ingresos y egresos de forma diaria y mensual.",
         scaleToolTip: [
           {
             value: 0,
             description:
-              "Los ingresos no son suficientes para la adquisición ni el mantenimiento de electrodomésticos.",
+              "Ausencia total de un registro actualizado de ingresos y egresos, ya sea diaria o mensualmente. No se lleva un seguimiento financiero adecuado.",
           },
           {
             value: 1,
             description:
-              "Los ingresos son parcialmente suficientes, pero limitan la capacidad de adquirir o mantener algunos electrodomésticos.",
+              "Presencia parcial de un registro, pero la actualización diaria y mensual es limitada o inconsistente. Puede haber omisiones o retrasos en el seguimiento financiero.",
           },
           {
             value: 2,
             description:
-              "Los ingresos son suficientes para acceder a la mayoría o a todos los electrodomésticos necesarios y cubrir su mantenimiento.",
-          },
-        ],
-      },
-      {
-        name: "Definición de Objetivos Personales y Familiares",
-        item: "Evalúe si el emprendedor ha definido objetivos a corto y mediano plazo, tanto personales como familiares. Incluya metas personales a seis meses y en los próximos dos años.",
-        scaleToolTip: [
-          {
-            value: 0,
-            description:
-              "No se han definido objetivos personales ni familiares a corto ni mediano plazo.",
-          },
-          {
-            value: 1,
-            description:
-              "Se han definido parcialmente objetivos personales o familiares a corto o mediano plazo.",
-          },
-          {
-            value: 2,
-            description:
-              "Se han definido claramente objetivos personales y familiares a corto y mediano plazo.",
+              "Presencia completa de un registro financiero actualizado de forma diaria y mensual. Se lleva un seguimiento detallado y consistente de los ingresos y egresos.",
           },
         ],
       },
@@ -272,8 +251,7 @@ function saveAnswers() {
     areNull.value = true;
   } else {
     areNull.value = false;
-    // monitoryFormStore.saludar(mergedArray);
-    monitoryFormStore.setPersonaFamilia(mergedArray);
+    monitoryFormStore.setGestionEmpresarial(mergedArray);
   }
 }
 </script>
