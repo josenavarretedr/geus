@@ -6,8 +6,8 @@ import router from '@/router';
 
 import appFirebase from '@/firebaseInit';
 
-import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { getFirestore, collection, setDoc, getDocs, doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getFirestore, collection, setDoc, getDocs, getDoc, doc, updateDoc, onSnapshot } from "firebase/firestore";
 
 const db = getFirestore(appFirebase);
 const auth = getAuth(appFirebase);
@@ -35,6 +35,12 @@ export const useBeneficiariesStore = defineStore('beneficiaries', () => {
 
   function getBeneficiary(id) {
     return beneficiaries.value.find(beneficiary => beneficiary.id === id);
+  }
+
+
+
+  function getBeneficiaryIndexById(id) {
+    return beneficiaries.value.findIndex(beneficiary => beneficiary.id === id);
   }
 
   async function createBeneficiary({
@@ -104,6 +110,32 @@ export const useBeneficiariesStore = defineStore('beneficiaries', () => {
     }
   }
 
+  function updateMonitoryBeneficiaryInStore(indexOfBeneficiaryInStore, data) {
+
+    if (beneficiaries.value[indexOfBeneficiaryInStore].hasOwnProperty('monitory')) {
+      beneficiaries.value[indexOfBeneficiaryInStore]['monitory'].push(data);
+    } else {
+      beneficiaries.value[indexOfBeneficiaryInStore]['monitory'] = [data];
+    }
+    console.log('Se actualizó el beneficiario', beneficiaries.value[indexOfBeneficiaryInStore]);
+  }
+
+  async function getBeneficiaryDataFromFirestore(id) {
+    try {
+      const docRef = doc(db, "beneficiaries", id);
+      const docSnapshot = await getDoc(docRef);
+
+      if (docSnapshot.exists()) {
+        console.log("Document data:", docSnapshot.data());
+        return docSnapshot.data();
+      } else {
+        console.log("No such document!");
+      }
+    } catch (e) {
+      console.error("Error getting document: ", e);
+    }
+  }
+
   return {
     beneficiaries,
     beneficiary,
@@ -112,8 +144,12 @@ export const useBeneficiariesStore = defineStore('beneficiaries', () => {
     dni,
     email,
     getBeneficiaries,
-    getBeneficiary, createBeneficiary,
-    updateProgressOfBeneficiary
+    getBeneficiary,
+    getBeneficiaryIndexById,
+    createBeneficiary,
+    updateProgressOfBeneficiary,
+    updateMonitoryBeneficiaryInStore,
+    getBeneficiaryDataFromFirestore
   }
 
 }

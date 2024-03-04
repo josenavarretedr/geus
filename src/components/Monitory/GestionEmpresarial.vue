@@ -96,6 +96,8 @@ const componentMonitoryForm = ref([
       {
         name: "Claridad en la definición de objetivos",
         item: "El emprendedor tiene metas u objetivos claramente definidos a corto y largo plazo. Estos objetivos pueden estar relacionados con mejoras operativas, ventas o acciones en marcha, así como también con el futuro del emprendimiento, abarcando aspectos como ubicación y capacidad operativa.",
+        question:
+          "¿Tienes metas u objetivos claramente definidos para tu emprendimiento a corto y largo plazo?",
         scaleToolTip: [
           {
             value: 0,
@@ -117,6 +119,8 @@ const componentMonitoryForm = ref([
       {
         name: "Proyección de Mejoras Empresariales",
         item: "Indique si el emprendedor tiene proyectado realizar alguna mejora relacionada al área de trabajo, imagen, producto, servicio, u otras áreas pertinentes a su emprendimiento",
+        question:
+          "¿Tienes proyectado realizar mejoras en tu emprendimiento, ya sea en el área de trabajo, imagen, producto, servicio u otras áreas relevantes?",
         scaleToolTip: [
           {
             value: 0,
@@ -243,6 +247,7 @@ function saveAnswers() {
       return {
         value: selectedValues.value[index],
         commentOrRecommendation: comments.value[index],
+        question: criterion.question,
       };
     }
   );

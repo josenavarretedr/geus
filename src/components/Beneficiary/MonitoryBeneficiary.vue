@@ -2,6 +2,7 @@
   <div>
     <h1>Aquí se subirá el resumen del monitoreo del emprendedor</h1>
 
+    <SumaryMonitory :monitories="beneficiaryData.monitory" />
     <button
       @click="redirectToMonitoryForm"
       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -26,13 +27,25 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
+
+import { useBeneficiariesStore } from "@/stores/beneficiaries.js";
+import SumaryMonitory from "../Monitory/SumaryMonitory.vue";
 
 const router = useRouter();
 
+const beneficiariesStore = useBeneficiariesStore();
+const idUser = router.currentRoute.value.params.idBeneficiary;
+
+const beneficiaryData = ref(null);
+
+onBeforeMount(async () => {
+  beneficiaryData.value =
+    await beneficiariesStore.getBeneficiaryDataFromFirestore(idUser);
+});
+
 const redirectToMonitoryForm = () => {
-  const idBeneficiary = 123; // Reemplaza 123 con el valor real del idBeneficiary
   router.push({ name: "AddMonitoryBeneficiary" });
 };
 </script>

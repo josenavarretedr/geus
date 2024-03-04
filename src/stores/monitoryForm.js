@@ -1,18 +1,17 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
-import appFirebase from '@/firebaseInit';
+import router from '@/router'
 
+// Inicianlizacion de Firebase
+import appFirebase from '@/firebaseInit';
 import { getFirestore, doc, updateDoc, arrayUnion } from "firebase/firestore";
 
+import { useBeneficiariesStore } from "@/stores/beneficiaries.js";
+const beneficiariesStore = useBeneficiariesStore();
 
-
-// import { getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-// import { getFirestore, collection, setDoc, getDocs, doc, updateDoc, arrayUnion } from "firebase/firestore";
 
 const db = getFirestore(appFirebase);
-// const auth = getAuth(appFirebase);
-
 
 export const useMonitoryFormStore = defineStore('monitoryForm', () => {
 
@@ -23,6 +22,7 @@ export const useMonitoryFormStore = defineStore('monitoryForm', () => {
   function setPersonaFamilia(data) {
     personaFamilia.value = data;
     console.log('Se guardo en el store', personaFamilia.value);
+
   }
 
   function setGestionEmpresarial(data) {
@@ -32,18 +32,18 @@ export const useMonitoryFormStore = defineStore('monitoryForm', () => {
 
   function setGestionProveedores(idBeneficiary, data) {
     gestionProveedores.value = data;
-    console.log('Se guardo en el store', gestionProveedores.value);
-    addNewMonitory(idBeneficiary)
+
+
+    addNewMonitoryFirestore(idBeneficiary)
+    // addMonitoryStore(idBeneficiary, dataOfNewMonitory)
+    clearAllStates()
   }
 
-  function saludar(data) {
-    console.log('Hola', data);
-  }
-
-  async function addNewMonitory(idBeneficiary,) {
+  async function addNewMonitoryFirestore(idBeneficiary, dataOfNewMonitory) {
     try {
 
       const idBeneficiaryRef = doc(db, "beneficiaries", idBeneficiary);
+
 
       const dataOfNewMonitory = {
         timestamp: new Date(),
@@ -54,22 +54,35 @@ export const useMonitoryFormStore = defineStore('monitoryForm', () => {
         }
       };
 
-
       // Atomically add a new region to the "regions" array field.
       await updateDoc(idBeneficiaryRef, {
         monitory: arrayUnion(dataOfNewMonitory)
       });
+
+      console.log('Se completo la carga en Firestore');
+      router.push({ name: "SumaryBeneficiary" });
+
+
 
     } catch (e) {
       console.error("Error updating document: ", e);
     }
   }
 
-  function saveToFirestore() {
-    console.log('Guardando en firestore');
+  function addMonitoryStore(idBeneficiary, dataOfNewMonitory) {
+    const indexOfBeneficiaryInStore = beneficiariesStore.getBeneficiaryIndexById(idBeneficiary);
+    beneficiariesStore.updateMonitoryBeneficiaryInStore(indexOfBeneficiaryInStore, dataOfNewMonitory)
 
+
+    // beneficiaries[i].monitory = [];
+    // break;
   }
 
+  function clearAllStates() {
+    personaFamilia.value = null;
+    gestionEmpresarial.value = null;
+    gestionProveedores.value = null;
+  }
 
   return {
     personaFamilia,
@@ -78,8 +91,6 @@ export const useMonitoryFormStore = defineStore('monitoryForm', () => {
     setPersonaFamilia,
     setGestionEmpresarial,
     setGestionProveedores,
-    // addNewMonitory,
-    saludar
   }
 
 }

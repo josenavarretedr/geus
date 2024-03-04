@@ -98,6 +98,8 @@ const componentMonitoryForm = ref([
       {
         name: "Estandarización de Procesos Empresariales",
         item: "Evalúe si el emprendimiento tiene pautas claras, manuales o procesos establecidos para la producción o prestación de servicios.",
+        question:
+          "¿Consigues los materiales y cosas que necesitas para tu emprendimiento de diferentes lugares, o siempre dependes de un solo proveedor?",
         scaleToolTip: [
           {
             value: 0,
@@ -116,71 +118,6 @@ const componentMonitoryForm = ref([
           },
         ],
       },
-      {
-        name: "Claridad en Funciones y Responsabilidades",
-        item: "Evalúe si en el emprendimiento hay una clara definición de funciones y responsabilidades para los trabajadores, colaboradores ocasionales y el emprendedor",
-        scaleToolTip: [
-          {
-            value: 0,
-            description:
-              "No hay una clara definición de funciones y responsabilidades. Las tareas asignadas no están bien definidas.",
-          },
-          {
-            value: 1,
-            description:
-              "Existe una definición parcial de funciones y responsabilidades, pero la claridad es limitada. Puede haber cierta ambigüedad en las tareas asignadas.",
-          },
-          {
-            value: 2,
-            description:
-              "Hay una definición clara de funciones y responsabilidades para los trabajadores, colaboradores ocasionales y el emprendedor. Todas las tareas están claramente definidas y comprendidas por todos los involucrados.",
-          },
-        ],
-      },
-      /**
-      {
-        name: "Protocolo de Atención al Cliente",
-        item: "Evalúe si en el emprendimiento existe un protocolo claro para atender al cliente, tanto en la presentación de servicios como en el proceso de compra de productos/servicios",
-        scaleToolTip: [
-          {
-            value: 0,
-            description:
-              "Ausencia total de un protocolo establecido para atender al cliente. No hay pautas definidas para la presentación de servicios ni en el proceso de compra.",
-          },
-          {
-            value: 1,
-            description:
-              "Presencia parcial de un protocolo, pero la claridad y consistencia son limitadas. Puede haber cierta falta de coherencia en la atención al cliente.",
-          },
-          {
-            value: 2,
-            description:
-              "Presencia completa de un protocolo claro y establecido para atender al cliente en la presentación de servicios y durante el proceso de compra de productos/servicios. Las pautas son claras y se aplican de manera consistente.",
-          },
-        ],
-      },
-      {
-        name: "Registro Financiero Actualizado",
-        item: "Evalúe si el emprendimiento mantiene un registro actualizado de ingresos y egresos de forma diaria y mensual.",
-        scaleToolTip: [
-          {
-            value: 0,
-            description:
-              "Ausencia total de un registro actualizado de ingresos y egresos, ya sea diaria o mensualmente. No se lleva un seguimiento financiero adecuado.",
-          },
-          {
-            value: 1,
-            description:
-              "Presencia parcial de un registro, pero la actualización diaria y mensual es limitada o inconsistente. Puede haber omisiones o retrasos en el seguimiento financiero.",
-          },
-          {
-            value: 2,
-            description:
-              "Presencia completa de un registro financiero actualizado de forma diaria y mensual. Se lleva un seguimiento detallado y consistente de los ingresos y egresos.",
-          },
-        ],
-      },
-      */
     ],
   },
 ]);
@@ -197,12 +134,13 @@ const comments = ref(
   )
 );
 
-function saveAnswers() {
+async function saveAnswers() {
   const mergedArray = componentMonitoryForm.value[0].evaluationCriterion.map(
     (criterion, index) => {
       return {
         value: selectedValues.value[index],
         commentOrRecommendation: comments.value[index],
+        question: criterion.question,
       };
     }
   );
@@ -211,7 +149,7 @@ function saveAnswers() {
     areNull.value = true;
   } else {
     areNull.value = false;
-    monitoryFormStore.setGestionProveedores(
+    await monitoryFormStore.setGestionProveedores(
       router.currentRoute.value.params.idBeneficiary,
       mergedArray
     );

@@ -96,6 +96,8 @@ const componentMonitoryForm = ref([
       {
         name: "Suficiencia de Ingresos para Acceso a Servicios de Salud",
         item: "Evalúe la suficiencia de los ingresos generados por el emprendimiento para que el emprendedor y su núcleo familiar puedan acceder a servicios de salud, tales como citas médicas particulares, compra de medicamentos, afiliación a salud, entre otros.",
+        question:
+          "¿Con el dinero que ganas de tu emprendimiento, puedes pagar por tus visitas al médico, medicinas y otros gastos de salud?",
         scaleToolTip: [
           {
             value: 0,
@@ -117,6 +119,8 @@ const componentMonitoryForm = ref([
       {
         name: "Suficiencia de Ingresos para Alimentación Familiar",
         item: "Evalúe si los ingresos generados por el emprendimiento permiten al emprendedor comprar alimentos suficientes para él y su núcleo familiar.",
+        question:
+          "¿Con el dinero que ganas de tu emprendimiento, puedes comprar suficientes alimentos para ti y tu familia?",
         scaleToolTip: [
           {
             value: 0,
@@ -264,6 +268,7 @@ function saveAnswers() {
       return {
         value: selectedValues.value[index],
         commentOrRecommendation: comments.value[index],
+        question: criterion.question,
       };
     }
   );
