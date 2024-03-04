@@ -1,9 +1,6 @@
 <template>
   <div>
     <CardSumaryBeneficiary></CardSumaryBeneficiary>
-    <!-- <SumaryStage></SumaryStage> -->
-    <!-- Monitoreo Component -->
-    {{ beneficiaryData }}
     <div class="monitoring-card">
       <button @click="redirectToMonitoring" class="monitoring-button">
         <i class="fas fa-eye"></i>
@@ -14,24 +11,12 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from "vue";
+import { ref } from "vue";
 
 import CardSumaryBeneficiary from "@/components/Beneficiary/CardSumaryBeneficiary.vue";
 import SumaryStage from "@/components/Beneficiary/SumaryStage.vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
-
-import { useBeneficiariesStore } from "@/stores/beneficiaries.js";
-const beneficiariesStore = useBeneficiariesStore();
-
-const beneficiaryData = ref(null);
-
-const idUser = router.currentRoute.value.params.idBeneficiary;
-
-onBeforeMount(async () => {
-  beneficiaryData.value =
-    await beneficiariesStore.getBeneficiaryDataFromFirestore(idUser);
-});
 
 function redirectToMonitoring() {
   router.push({ name: "MonitoryBeneficiary" });

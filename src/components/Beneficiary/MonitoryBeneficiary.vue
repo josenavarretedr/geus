@@ -2,7 +2,14 @@
   <div>
     <h1>Aquí se subirá el resumen del monitoreo del emprendedor</h1>
 
-    <SumaryMonitory :monitories="beneficiaryData.monitory" />
+    <Suspense>
+      <template #default>
+        <SumaryMonitory />
+      </template>
+      <template #fallback>
+        <div class="text-center">Cargando...</div>
+      </template>
+    </Suspense>
     <button
       @click="redirectToMonitoryForm"
       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -40,10 +47,10 @@ const idUser = router.currentRoute.value.params.idBeneficiary;
 
 const beneficiaryData = ref(null);
 
-onBeforeMount(async () => {
-  beneficiaryData.value =
-    await beneficiariesStore.getBeneficiaryDataFromFirestore(idUser);
-});
+// onBeforeMount(async () => {
+//   beneficiaryData.value =
+//     await beneficiariesStore.getBeneficiaryDataFromFirestore(idUser);
+// });
 
 const redirectToMonitoryForm = () => {
   router.push({ name: "AddMonitoryBeneficiary" });
