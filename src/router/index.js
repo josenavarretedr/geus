@@ -74,12 +74,17 @@ const routes = [
       {
         path: 'monitory',
         name: 'MonitoryBeneficiary',
-        component: () => import('@/components/Beneficiary/MonitoryBeneficiary.vue'),
+        component: () => import('@/components/Monitory/MonitoryBeneficiary.vue'),
       },
       {
         path: 'monitory/add',
         name: 'AddMonitoryBeneficiary',
         component: () => import('@/components/Monitory/MonitoryForm.vue'),
+      },
+      {
+        path: 'monitory/:idMonitory',
+        name: 'OneMonitoryBeneficiary',
+        component: () => import('@/components/Monitory/OneMonitoryBeneficiary.vue'),
       },
       {
         path: 'sum',

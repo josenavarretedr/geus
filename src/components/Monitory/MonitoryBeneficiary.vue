@@ -1,15 +1,6 @@
 <template>
-  <div>
-    <h1>Aquí se subirá el resumen del monitoreo del emprendedor</h1>
-
-    <Suspense>
-      <template #default>
-        <SumaryMonitory />
-      </template>
-      <template #fallback>
-        <div class="text-center">Cargando...</div>
-      </template>
-    </Suspense>
+  <div class="px-4">
+    <h1 class="text-2xl font-bold mb-4 px-5 m-5">Monitoreos</h1>
     <button
       @click="redirectToMonitoryForm"
       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -30,6 +21,14 @@
       </svg>
       Agregar Monitoreo
     </button>
+    <Suspense>
+      <template #default>
+        <SumaryMonitories />
+      </template>
+      <template #fallback>
+        <div class="text-center">Cargando...</div>
+      </template>
+    </Suspense>
   </div>
 </template>
 
@@ -38,7 +37,7 @@ import { ref, onBeforeMount } from "vue";
 import { useRouter } from "vue-router";
 
 import { useBeneficiariesStore } from "@/stores/beneficiaries.js";
-import SumaryMonitory from "../Monitory/SumaryMonitory.vue";
+import SumaryMonitories from "../Monitory/SumaryMonitories.vue";
 
 const router = useRouter();
 

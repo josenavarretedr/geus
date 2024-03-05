@@ -15,14 +15,16 @@ const db = getFirestore(appFirebase);
 
 export const useMonitoryFormStore = defineStore('monitoryForm', () => {
 
+  const dataOfOneMonitory = ref(null);
+
   const personaFamilia = ref(null);
   const gestionEmpresarial = ref(null);
   const gestionProveedores = ref(null);
+  const evidenceOfMonitory = ref(null);
 
   function setPersonaFamilia(data) {
     personaFamilia.value = data;
     console.log('Se guardo en el store', personaFamilia.value);
-
   }
 
   function setGestionEmpresarial(data) {
@@ -32,10 +34,16 @@ export const useMonitoryFormStore = defineStore('monitoryForm', () => {
 
   function setGestionProveedores(idBeneficiary, data) {
     gestionProveedores.value = data;
+    console.log('Se guardo en el store', gestionProveedores.value);
+  }
 
+  function setEvidenceOFMonitory(data) {
+    evidenceOfMonitory.value = data;
+    console.log('Se guardo en el store', evidenceOfMonitory.value);
+  }
 
+  function saveNewMonitory(idBeneficiary) {
     addNewMonitoryFirestore(idBeneficiary)
-    // addMonitoryStore(idBeneficiary, dataOfNewMonitory)
     clearAllStates()
   }
 
@@ -50,7 +58,8 @@ export const useMonitoryFormStore = defineStore('monitoryForm', () => {
         data: {
           personaFamilia: personaFamilia.value,
           gestionEmpresarial: gestionEmpresarial.value,
-          gestionProveedores: gestionProveedores.value
+          gestionProveedores: gestionProveedores.value,
+          evidenceOfMonitory: evidenceOfMonitory.value
         }
       };
 
@@ -69,28 +78,36 @@ export const useMonitoryFormStore = defineStore('monitoryForm', () => {
     }
   }
 
-  function addMonitoryStore(idBeneficiary, dataOfNewMonitory) {
-    const indexOfBeneficiaryInStore = beneficiariesStore.getBeneficiaryIndexById(idBeneficiary);
-    beneficiariesStore.updateMonitoryBeneficiaryInStore(indexOfBeneficiaryInStore, dataOfNewMonitory)
-
-
-    // beneficiaries[i].monitory = [];
-    // break;
-  }
-
   function clearAllStates() {
     personaFamilia.value = null;
     gestionEmpresarial.value = null;
     gestionProveedores.value = null;
   }
 
+  function setOneMonitoryData(data) {
+    dataOfOneMonitory.value = '';
+    dataOfOneMonitory.value = data;
+    console.log('Se guardo en el store', dataOfOneMonitory.value);
+  }
+
   return {
     personaFamilia,
     gestionEmpresarial,
     gestionProveedores,
+    evidenceOfMonitory,
+
+    dataOfOneMonitory,
+
     setPersonaFamilia,
     setGestionEmpresarial,
     setGestionProveedores,
+
+    setEvidenceOFMonitory,
+
+    saveNewMonitory,
+
+
+    setOneMonitoryData,
   }
 
 }
