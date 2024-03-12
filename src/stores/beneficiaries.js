@@ -62,19 +62,21 @@ export const useBeneficiariesStore = defineStore('beneficiaries', () => {
       const idBeneficiary = uuidv4();
 
       await setDoc(doc(db, "beneficiaries", idBeneficiary), {
-        name,
-        surname,
-        phone,
-        age,
-        id: idBeneficiary,
-        birthdate,
-        sex,
-        isPregnant,
-        isLactating,
-        gender,
-        nationality,
-        docID,
-        numDocID,
+        profile: {
+          name,
+          surname,
+          phone,
+          age,
+          id: idBeneficiary,
+          birthdate,
+          sex,
+          // isPregnant,
+          // isLactating,
+          gender,
+          nationality,
+          docID,
+          numDocID,
+        },
         progress: [
           {
             id: "94421b49-fda1-4006-a03d-d70e2466fdba",

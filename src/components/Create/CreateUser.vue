@@ -261,8 +261,8 @@ function createBeneficiaryUI() {
     birthdate: birthdate.value,
     timestamp: timestamp.value,
     sex: sexSelected.value,
-    isPregnant: isPregnant.value,
-    isLactating: isLactating.value,
+    // isPregnant: isPregnant.value,
+    // isLactating: isLactating.value,
     gender:
       genderSelected.value === "Otro"
         ? genderSelectedOther.value

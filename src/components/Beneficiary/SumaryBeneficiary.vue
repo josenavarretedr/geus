@@ -6,6 +6,10 @@
         <i class="fas fa-eye"></i>
         Monitoreo
       </button>
+      <button @click="redirectToBusiness" class="monitoring-button">
+        <i class="fas fa-eye"></i>
+        Negocio
+      </button>
     </div>
   </div>
 </template>
@@ -20,6 +24,10 @@ const router = useRouter();
 
 function redirectToMonitoring() {
   router.push({ name: "MonitoryBeneficiary" });
+}
+
+function redirectToBusiness() {
+  router.push({ name: "BusinessBeneficiary" });
 }
 </script>
 

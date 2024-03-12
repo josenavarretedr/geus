@@ -101,6 +101,21 @@ const routes = [
         path: 'stage-beneficiary/:idStage',
         name: 'StageBeneficiary',
         component: () => import('@/components/Beneficiary/StageBeneficiary.vue'),
+      },
+      {
+        path: 'business',
+        name: 'BusinessBeneficiary',
+        component: () => import('@/views/Business.vue'),
+      },
+      {
+        path: 'business/create',
+        name: 'CreateBusinessBeneficiaryRoute',
+        component: () => import('@/components/Business/CreateBusinessBeneficiary.vue'),
+      },
+      {
+        path: 'business/edit',
+        name: 'EditBusinessBeneficiaryRoute',
+        component: () => import('@/components/Business/EditBusinessBeneficiary.vue'),
       }
     ]
   }
