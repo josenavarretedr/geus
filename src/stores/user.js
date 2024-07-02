@@ -46,7 +46,7 @@ export const useUserStore = defineStore('user', () => {
       await stageStore.getStages();
 
       router.push('/dashboard');
-      console.log('Beneficiaries: ', beneficiariesStore.beneficiaries);
+      console.log('Se cargo desde el sing ingBeneficiaries: ', beneficiariesStore.beneficiaries);
     } catch (error) {
       console.error('Error signing in: ', error);
     }

@@ -68,8 +68,8 @@ export const useMonitoryFormStore = defineStore('monitoryForm', () => {
         monitory: arrayUnion(dataOfNewMonitory)
       });
 
-      console.log('Se completo la carga en Firestore');
-      router.push({ name: "SumaryBeneficiary" });
+      console.log('Se completo la carga en Firestore', idBeneficiary);
+      router.push({ name: "SumaryBeneficiary", params: { idBeneficiary: idBeneficiary } });
 
 
 

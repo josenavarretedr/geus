@@ -1,16 +1,12 @@
 <template>
   <div>
-    <h1>Hola desde crear negocio del beneficiario</h1>
-
-    <pre>
-      {{ business }}
-    </pre>
+    <h1>Hola desde Formulario de EDITAR negocio del beneficiario</h1>
 
     <div class="form">
       <div class="form-group flex items-center">
         <label for="name" class="mr-2 w-56 text-right"
-          >Nombre del negocio:</label
-        >
+          >Nombre del negocio:
+        </label>
         <input
           type="text"
           id="name"
@@ -195,18 +191,19 @@
       </div>
 
       <div class="form-group flex items-center">
-        <NewFileInput
+        <!-- TODO Tengo que hacer que el componente NewFileInput, reciba un download ref si es que existe para que pueda mostrar la vista previa del documento -->
+        <!-- <NewFileInput
           namePath="evidenciaBusiness"
           :idUser="idUser"
           @fileSelected="getDataFromChildrenInputFile"
-        />
+        /> -->
       </div>
 
       <button
         class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        @click="createBusiness"
+        @click="editBusiness"
       >
-        Crear negocio
+        Actualizar negocio
       </button>
     </div>
   </div>
@@ -215,43 +212,41 @@
 <script setup>
 import { ref } from "vue";
 
-import NewFileInput from "@/components/Inputs/NewFileInput.vue";
-
 import appFirebase from "@/firebaseInit";
-import { getFirestore, doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { getFirestore, doc, getDoc, updateDoc } from "firebase/firestore";
 const db = getFirestore(appFirebase);
 
-import { useRouter } from "vue-router";
+// import NewFileInput from "@/components/Inputs/NewFileInput.vue";
 
+import { useRouter } from "vue-router";
 const router = useRouter();
 
 const idUser = router.currentRoute.value.params.idBeneficiary;
 
-const business = ref({
-  name: "",
-  address: "",
-  phone: "",
-  description: "",
-  category: "",
-  ageOfBusiness: "",
+// Get data from firestore
 
-  formality: "",
-  logo: "",
-  social: {
-    facebook: "",
-    instagram: "",
-    tiktok: "",
-  },
-  location: {
-    lat: "",
-    lng: "",
-  },
-  evidence: {
-    downloadURL: "",
-    refFile: "",
-  },
-  status: "active",
-});
+const beneficiaryData = ref(null);
+const business = ref(null);
+
+const getDataFirestore = async (id) => {
+  try {
+    const docRef = doc(db, "beneficiaries", id);
+    const docSnapshot = await getDoc(docRef);
+
+    if (docSnapshot.exists()) {
+      beneficiaryData.value = docSnapshot.data();
+      if (beneficiaryData.value.business) {
+        business.value = docSnapshot.data().business;
+      }
+    } else {
+      console.log("No such document!");
+    }
+  } catch (e) {
+    console.error("Error getting document: ", e);
+  }
+};
+
+await getDataFirestore(idUser);
 
 function getLocation() {
   if (navigator.geolocation) {
@@ -276,7 +271,7 @@ function getDataFromChildrenInputFile(file) {
   business.value.evidence.refFile = file.refFile;
 }
 
-async function createBusiness() {
+async function editBusiness() {
   try {
     const idBeneficiaryRef = doc(db, "beneficiaries", idUser);
 
@@ -292,22 +287,3 @@ async function createBusiness() {
   }
 }
 </script>
-
-<style>
-.form {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.form-group {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-label {
-  margin-right: 10px;
-}
-</style>

@@ -43,7 +43,7 @@ const routes = [
   {
     path: '/create',
     name: 'Create',
-    component: () => import('@/views/Create.vue'),
+    component: () => import('@/components/Beneficiary/CreateBeneficiary.vue'),
     meta: { requiresAuth: true }
   },
   {

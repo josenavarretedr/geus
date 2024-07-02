@@ -50,7 +50,6 @@ const getDataFirestore = async (id) => {
     const docSnapshot = await getDoc(docRef);
 
     if (docSnapshot.exists()) {
-      console.log("Document data:", docSnapshot.data());
       beneficiaryData.value = docSnapshot.data();
       if (beneficiaryData.value.business) {
         business.value = docSnapshot.data().business;

@@ -21,12 +21,15 @@
       </svg>
       Registra Beneficiario
     </router-link>
-    <router-link
-      to="/createStages"
-      class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-      >Registra etapa
-    </router-link>
-    <SearchUser />
+
+    <Suspense>
+      <template #default>
+        <SearchAsyncUser />
+      </template>
+      <template #fallback>
+        <div class="text-center">Cargando...</div>
+      </template>
+    </Suspense>
   </div>
 </template>
 
@@ -34,7 +37,7 @@
 import { useUserStore } from "@/stores/user";
 
 import BtnLogOut from "@/components/User/BtnLogOut.vue";
-import SearchUser from "@/components/SearchUser/SearchUser.vue";
+import SearchAsyncUser from "@/components/SearchUser/SearchAsyncUser.vue";
 // import AlgoliaSearch from "@/components/SearchUser/AlgoliaSearch.vue";
 
 const storeUser = useUserStore();
