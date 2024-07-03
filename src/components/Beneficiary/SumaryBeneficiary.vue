@@ -1,6 +1,14 @@
 <template>
   <div>
-    <CardSumaryBeneficiary></CardSumaryBeneficiary>
+    <Suspense>
+      <template #default>
+        <CardSumaryBeneficiary />
+      </template>
+      <template #fallback>
+        <div class="text-center">Cargando...</div>
+      </template>
+    </Suspense>
+
     <div class="monitoring-card">
       <button @click="redirectToMonitoring" class="monitoring-button">
         <i class="fas fa-eye"></i>

@@ -131,6 +131,7 @@ const personaFamilia = ref(null);
 const gestionEmpresarial = ref(null);
 const gestionProveedores = ref(null);
 
+// TODO lo ideal sería que llame a un function que esté en el store de beneficiarios y que se encargue de traer la data del beneficiario desde firestore y la guarde en el store de beneficiarios para que esté disponible en toda la app y no solo en este componente en particular. A esta posibe function la llamaremos getBeneficiaryDataFromFirestore(id) y la pondremos en el store de beneficiarios.
 const getDataFirestore = async (id) => {
   try {
     const docRef = doc(db, "beneficiaries", id);
